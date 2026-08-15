@@ -15,7 +15,7 @@ import os from 'node:os'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const project = join(here, '..')
-const repo = process.argv.find((a) => a.startsWith('--repo='))?.slice(7) ?? 'moeymakes/dsh-desktop'
+const repo = process.argv.find((a) => a.startsWith('--repo='))?.slice(7) ?? 'MoeyME/dsh-desktop'
 const version = process.argv.find((a) => /^\d+(\.\d+)*$/.test(a) && !a.startsWith('--'))
 const notes = process.argv.find((a) => a.startsWith('--notes='))?.slice(8) ?? ''
 

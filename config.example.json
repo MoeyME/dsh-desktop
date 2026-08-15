@@ -3,6 +3,6 @@
   "startCommand": "pnpm dsh web",
   "startCwd": "C:\\Users\\moey\\Dev\\repos\\deepseek-harness",
   "pollIntervalMs": 1500,
-  "updateUrl": "https://github.com/moeymakes/dsh-desktop/releases/latest/download/update.json",
+  "updateUrl": "https://github.com/MoeyME/dsh-desktop/releases/latest/download/update.json",
   "updateCheckIntervalMs": 21600000
 }

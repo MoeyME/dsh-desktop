@@ -80,9 +80,9 @@ node tools/publish-update.mjs 0.2.0 --notes "what changed"
 ```
 
 That uploads `release/DeepSeek Harness Setup 0.2.0.exe` to the
-`moeymakes/dsh-desktop` GitHub release and publishes `update.json` as a
+`MoeyME/dsh-desktop` GitHub release and publishes `update.json` as a
 release asset, so the app's stable feed URL
-(`https://github.com/moeymakes/dsh-desktop/releases/latest/download/update.json`)
+(`https://github.com/MoeyME/dsh-desktop/releases/latest/download/update.json`)
 starts pointing at the new version. Existing installs offer the update on
 their next launch or within the check interval.
 

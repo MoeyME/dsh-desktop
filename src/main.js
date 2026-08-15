@@ -34,7 +34,7 @@ const DEFAULTS = {
   startCwd: '',
   pollIntervalMs: 1500,
   // Update feed URL (JSON: version + installer url + optional sha256). Empty disables updates.
-  updateUrl: 'https://github.com/moeymakes/dsh-desktop/releases/latest/download/update.json',
+  updateUrl: 'https://github.com/MoeyME/dsh-desktop/releases/latest/download/update.json',
   updateCheckIntervalMs: 6 * 60 * 60 * 1000,
 }
 const CHECK_TIMEOUT_MS = 1200
