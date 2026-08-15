@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Updating DeepSeek Harness</title>
+    <style>
+      html, body { margin: 0; padding: 0; height: 100%; }
+      body {
+        background: #4d6bfe;
+        color: #fff;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+      }
+      .card { text-align: center; max-width: 380px; padding: 20px; }
+      img.logo { width: 56px; height: 56px; }
+      h1 { font-size: 17px; font-weight: 600; margin: 12px 0 6px; }
+      p.status { font-size: 13px; opacity: 0.92; margin: 0 0 14px; min-height: 20px; }
+      .track { height: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.25); overflow: hidden; }
+      .fill { height: 100%; width: 0%; border-radius: 999px; background: #fff; transition: width 0.2s ease; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img class="logo" src="logo.png" alt="" />
+      <h1>DeepSeek Harness</h1>
+      <p class="status" id="status">Preparing update…</p>
+      <div class="track"><div class="fill" id="fill"></div></div>
+    </div>
+    <script>
+      const status = document.getElementById('status')
+      const fill = document.getElementById('fill')
+      window.dsh.onUpdate(({ phase, pct, text }) => {
+        if (phase === 'downloading') {
+          status.textContent = text || 'Downloading update…'
+          fill.style.width = (pct ?? 0) + '%'
+        } else if (phase === 'done') {
+          status.textContent = text || 'Download complete.'
+          fill.style.width = '100%'
+        } else if (phase === 'error') {
+          status.textContent = 'Update failed: ' + (text || 'unknown error')
+          fill.style.width = '0%'
+        }
+      })
+    </script>
+  </body>
+</html>

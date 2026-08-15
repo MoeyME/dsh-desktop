@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DeepSeek Harness</title>
+    <style>
+      html, body { margin: 0; padding: 0; height: 100%; }
+      body {
+        background: #4d6bfe;
+        color: #fff;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+      }
+      .card { text-align: center; max-width: 480px; padding: 24px; }
+      img.logo { width: 96px; height: 96px; }
+      h1 { font-size: 26px; font-weight: 600; margin: 20px 0 8px; letter-spacing: 0.2px; }
+      p.status { font-size: 14px; line-height: 1.5; opacity: 0.92; margin: 0 0 24px; min-height: 42px; }
+      p.hint { font-size: 12.5px; opacity: 0.75; margin-top: 20px; line-height: 1.5; }
+      code { background: rgba(255, 255, 255, 0.16); padding: 2px 6px; border-radius: 4px; }
+      button {
+        background: #fff; color: #4d6bfe; border: none; border-radius: 8px;
+        font-size: 14px; font-weight: 600; padding: 10px 28px; cursor: pointer;
+      }
+      button:hover { opacity: 0.92; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img class="logo" src="logo.png" alt="" />
+      <h1>DeepSeek Harness</h1>
+      <p class="status" id="status">Connecting…</p>
+      <button id="retry" type="button">Retry now</button>
+      <p class="hint">
+        This window connects to the harness server on your machine and loads the
+        latest UI automatically. Start the server with <code>dsh web</code>
+        (or <code>pnpm dsh web</code> from the repository) — the window
+        reconnects on its own.
+      </p>
+    </div>
+    <script>
+      const status = document.getElementById('status')
+      document.getElementById('retry').addEventListener('click', () => window.dsh.retry())
+      window.dsh.onStatus((text) => { status.textContent = text })
+    </script>
+  </body>
+</html>
