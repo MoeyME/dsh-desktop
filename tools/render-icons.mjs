@@ -1,4 +1,4 @@
-// Rasterize the harness favicon.svg (white DeepSeek mark) onto the brand-blue
+// Rasterize the harness favicon.svg (black DeepSeek mark) onto a white
 // background at the PWA/app sizes the harness and this desktop shell need.
 // Usage: node tools/render-icons.mjs [harnessRoot] [outDir]
 //   harnessRoot - deepseek-harness checkout (default: Dev/repos/deepseek-harness)
@@ -10,22 +10,24 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 
 const here = dirname(fileURLToPath(import.meta.url))
-const harnessRoot = resolve(process.argv[2] ?? join(here, '..', '..', 'repos', 'deepseek-harness'))
+const harnessRoot = resolve(process.argv[2] ?? join(here, '..', '..', '..', 'repos', 'deepseek-harness'))
 const outDir = resolve(process.argv[3] ?? join(harnessRoot, 'apps', 'web', 'public'))
 
 const svg = await readFile(join(harnessRoot, 'apps', 'web', 'public', 'favicon.svg'), 'utf8')
 const inner = svg.slice(svg.indexOf('>') + 1, svg.lastIndexOf('</svg>'))
 
-const BLUE = '#4d6bfe'
+// Black-on-white app icon: white full-bleed square, black whale mark.
+const BG = '#ffffff'
+const MARK = '#000000'
 
 async function render(size, logoPct, out) {
   const browser = await chromium.launch()
   try {
     const page = await browser.newPage({ viewport: { width: size, height: size }, deviceScaleFactor: 1 })
-    const html = `<!doctype html><html><head><style>html,body{margin:0;padding:0;background:${BLUE}}</style></head>
-<body><div style="width:${size}px;height:${size}px;background:${BLUE};display:flex;align-items:center;justify-content:center">
+    const html = `<!doctype html><html><head><style>html,body{margin:0;padding:0;background:${BG}}</style></head>
+<body><div style="width:${size}px;height:${size}px;background:${BG};display:flex;align-items:center;justify-content:center">
 <svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(size * logoPct)}" height="${Math.round(size * logoPct)}" viewBox="0 0 50 50">
-<style>path{fill:#fff!important}</style>${inner}</svg></div></body></html>`
+<style>path{fill:${MARK}!important}</style>${inner}</svg></div></body></html>`
     await page.setContent(html)
     await page.screenshot({ path: out, type: 'png' })
   } finally {

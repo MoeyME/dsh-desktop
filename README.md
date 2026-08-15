@@ -90,7 +90,7 @@ their next launch or within the check interval.
 
 `build/icon.png` and `splash/logo.png` are rasterized from the harness's
 `apps/web/public/favicon.svg` by `tools/render-icons.mjs` (Playwright
-Chromium, DeepSeek blue `#4d6bfe` background). Regenerate with:
+Chromium, black DeepSeek mark on white). Regenerate with:
 
 ```sh
 node tools/render-icons.mjs   # needs the harness repo + its playwright install
