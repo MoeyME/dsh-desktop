@@ -118,7 +118,13 @@ function startServer() {
   child.on('error', error => sendStatus(`Failed to start the server: ${error.message}`))
   child.on('exit', (code, signal) => {
     serverPid = null
-    if (code !== 0) sendStatus(`Server command exited (code ${code ?? signal}) — see server.log`)
+    if (code !== 0) {
+      sendStatus(`Server command exited (code ${code ?? signal}) — will retry automatically`)
+      // A failed spawn must not consume the auto-start forever (e.g. an
+      // EADDRINUSE collision with a manually started server): re-arm the
+      // auto-start after a cooldown so the app recovers on its own.
+      setTimeout(() => { spawnAttempted = false }, 20_000)
+    }
   })
 }
 
