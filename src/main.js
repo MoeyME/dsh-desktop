@@ -32,7 +32,7 @@ const DEFAULTS = {
   // e.g. "pnpm dsh web" — spawned hidden with shell:true; empty disables auto-start.
   startCommand: '',
   startCwd: '',
-  pollIntervalMs: 1500,
+  pollIntervalMs: 1000,
   // Update feed URL (JSON: version + installer url + optional sha256). Empty disables updates.
   updateUrl: 'https://github.com/MoeyME/dsh-desktop/releases/latest/download/update.json',
   updateCheckIntervalMs: 6 * 60 * 60 * 1000,
@@ -54,6 +54,8 @@ let loadedGui = false
 let spawnAttempted = false
 let serverPid = null
 let serverLog = null
+let streamLostAt = 0
+let reloadedAfterStreamLoss = false
 
 /** Read config.json from userData, creating it from the bundled example on first run. */
 function loadConfig() {
@@ -196,6 +198,28 @@ function createWindow() {
       event.preventDefault()
       void shell.openExternal(url)
     }
+  })
+
+  // Stream-loss safety net: the GUI page reconnects its own event stream
+  // (backoff up to ~10 s), but when the harness restarts so fast that this
+  // app's probe never sees it down, the page is left with a dead stream and a
+  // stale UI. The page logs each loss; after the reconnect window, reload once
+  // per episode so the user never needs a manual refresh.
+  mainWindow.webContents.on('console-message', (event, _level, message) => {
+    const text = typeof message === 'string'
+      ? message
+      : (typeof event === 'object' && event !== null && typeof event.message === 'string' ? event.message : '')
+    if (!text.includes('[web-runtime] connection lost')) return
+    streamLostAt = Date.now()
+    reloadedAfterStreamLoss = false
+    setTimeout(() => {
+      if (mainWindow === null || mainWindow.isDestroyed()) return
+      if (reloadedAfterStreamLoss) return
+      if (Date.now() - streamLostAt < 15000) return
+      if (!serverUp) return // the splash/reload path owns a down server
+      reloadedAfterStreamLoss = true
+      mainWindow.webContents.reload()
+    }, 15000)
   })
 
   mainWindow.on('closed', () => { mainWindow = null })
